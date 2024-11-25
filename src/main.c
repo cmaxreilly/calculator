@@ -9,6 +9,7 @@
 
 /* Included libraries */
 #include <stdio.h>
+#include <string.h>
 
 /* Global constants */
 #define BUFSIZE 100
@@ -32,7 +33,7 @@ main(int argc, char *argv[])
 		help_mode();
 	} else if (argc == 3)
 	{
-		if (argv[1] == "-c")
+		if (strcmp(argv[1], "-c") == 0)
 			commandline_mode();
 		else
 			printf("invalid option\n");
@@ -46,9 +47,14 @@ int
 interactive_mode(void)
 {
 	char input[BUFSIZE];
-	printf("Enter expression at the prompt.\n >> ");
-	fgets(input, sizeof(input), stdin);
-	printf("You entered %s\n", input);
+    do {
+        
+	    printf("Enter expression at the prompt.\n >> ");
+	    if (fgets(input, sizeof(input), stdin) == NULL)
+            break; // Handles EOF error
+        input[strcspn(input, "\n")] = '\0';
+	    printf("You entered %s\n", input);
+    } while (strcmp(input, "exit") != 0);
 
 	return(0);
 }
